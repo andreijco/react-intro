@@ -7,7 +7,7 @@ class Card extends React.Component {
         <div className="card mb-3">
           <img className="card-img-top" src={this.props.img} alt={this.props.imgalt} />
           <div className="card-body">
-            <h4 className="card-title">{this.props.productName}</h4>
+            <h4 className="card-title">{this.props.productname}</h4>
             Price: <strong>{this.props.price}</strong>
             <p className="card-text">{this.props.desc}</p>
             <a href="#" className="btn btn-primary">Buy</a>
@@ -19,30 +19,37 @@ class Card extends React.Component {
 }
 
 class CardContainer extends React.Component {
+  constructor(props) {
+    // pass props to the parent component
+    super(props);
+    // initialize the state object of this component
+    this.state = {
+      cards: []
+    };
+  }
+
+  componentDidMount() {
+    fetch('cards.json')
+    .then(res => res.json())
+    .then((result) => {
+      this.setState({
+        cards: result
+      });
+    });
+  }
+
   render() {
-    //hardcoded card list
-    const cards = [{
-      "id" : 1,
-      "img" : "img/strings.png",
-      "imgalt":"string",
-      "desc":"A very authentic and beautiful instrument!!",
-      "price" : 100.0,
-      "productname" : "Strings"
-      }, {
-      "id" : 2,
-      "img" : "img/redguitar.jpeg",
-      "imgalt":"redg",
-      "desc":"A really cool red guitar that can produce super cool music!!",
-      "price" : 299.0,
-      "productname" : "Red Guitar"
-    }];
+    const cards = this.state.cards;
     //get a list of JSX elements representing each card
-    const cardItems = cards.map(
+    let cardItems = cards.map(
       card => <Card key={card.id} {...card} />
     );
     return (
-      <div>
-        {cardItems}
+      <div className="container pt-4">
+        <h3 className="text-center text-primary">Products</h3>
+        <div className="row pt-4">
+          {cardItems}
+        </div>
       </div>
     );
   }
